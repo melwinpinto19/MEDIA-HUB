@@ -123,6 +123,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
       new ApiResponse(200, "User logged in successfully", {
         accessToken,
         refreshToken,
+        user,
       })
     );
 });
@@ -193,14 +194,14 @@ const refreshAccessToken = asyncHandler(async (req, res, next) => {
 });
 
 const changeUserPassword = asyncHandler(async (req, res, next) => {
-  console.log("Inside JWT");
-
   const { oldPassword, newPassword } = req.body;
 
   // validate oldpassword :
   const isPasswordValid = await req.user.isPasswordCorrect(oldPassword);
 
   if (!isPasswordValid) throw new ApiError(401, "old password is incorrect");
+
+  console.log("Inside JWT");
 
   // update password :
   req.user.password = newPassword;
@@ -213,8 +214,7 @@ const changeUserPassword = asyncHandler(async (req, res, next) => {
 
 const getCurrentUser = asyncHandler((req, res, next) => {
   res.json({
-    user: req.user?.username,
-    avatar: req.user?.avatar,
+    user: req.user,
   });
 });
 
@@ -238,7 +238,7 @@ const updateAvatar = asyncHandler(async (req, res, next) => {
 });
 
 const updateCoverImage = asyncHandler(async (req, res, next) => {
-  const localCoverImagePath = req.files?.avatar[0]?.path;
+  const localCoverImagePath = req.files?.coverImage[0]?.path;
 
   if (!localCoverImagePath) throw new ApiError(401, "Avatar file is missing");
 
@@ -256,6 +256,20 @@ const updateCoverImage = asyncHandler(async (req, res, next) => {
   });
 });
 
+const deleteUser = asyncHandler(async (req, res, next) => {
+  const { password } = req.body;
+  const isPasswordCorrect = await req.user.isPasswordCorrect(password);
+  if (!isPasswordCorrect) throw new ApiError(401, "Password is incorrect");
+
+  await userModel.findByIdAndDelete(req.user._id);
+
+  res
+    .status(200)
+    .cookie("accessToken", null, { httpOnly: true, secure: true })
+    .cookie("refreshToken", null, { httpOnly: true, secure: true })
+    .json(new ApiResponse(200, "User deleted successfully", { user: null }));
+});
+
 export {
   registerUser,
   loginUser,
@@ -265,4 +279,5 @@ export {
   getCurrentUser,
   updateAvatar,
   updateCoverImage,
+  deleteUser,
 };
