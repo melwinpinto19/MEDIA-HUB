@@ -9,6 +9,7 @@ import {
   updateAvatar,
   updateCoverImage,
   deleteUser,
+  getUserProfile,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import verifyJwt from "../middlewares/logout.middleware.js";
@@ -37,6 +38,8 @@ router.route("/get-current-user").post(verifyJwt, getCurrentUser);
 router.route("/change-password").post(verifyJwt, changeUserPassword);
 
 router.route("/delete-account").delete(verifyJwt, deleteUser);
+
+router.route("/get-user-profile").post(verifyJwt, getUserProfile);
 
 router
   .route("/update-avatar")

@@ -5,10 +5,12 @@ import { useState } from "react";
 const ListItem = ({ text, url, icon }) => {
   return (
     <li
-      className={`w-full h-10 bg-red-500 mb-5 flex justify-between items-center px-4`}
+      className={` text-white mb-5 w-full justify-center items-center px-4 flex gap-4`}
     >
       <i className={`fa-solid fa-${icon}`}></i>
-      <NavLink to={url}>{text}</NavLink>
+      <NavLink to={url} className="text-2xl hover:text-gray-400">
+        {text}
+      </NavLink>
     </li>
   );
 };

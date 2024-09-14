@@ -213,8 +213,10 @@ const changeUserPassword = asyncHandler(async (req, res, next) => {
 });
 
 const getCurrentUser = asyncHandler((req, res, next) => {
-  res.json({
-    user: req.user,
+  res.status(200).json({
+    user: {
+      username: req.user.username,
+    },
   });
 });
 
@@ -270,6 +272,67 @@ const deleteUser = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, "User deleted successfully", { user: null }));
 });
 
+const getUserProfile = asyncHandler(async (req, res, next) => {
+  const { username } = req.body;
+
+  if (!username) throw new ApiError(400, "Username does not exists");
+
+  const response = await userModel.aggregate([
+    // filtering the users:
+    { $match: { username: username } },
+    // getting the count of subscribers :
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "_id",
+        foreignField: "channel",
+        as: "subscribers",
+      },
+    },
+    // getting the count of subscriptions :
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "_id",
+        foreignField: "subscriber",
+        as: "subscribedTo",
+      },
+    },
+    {
+      $addFields: {
+        subscribersCount: { $size: "$subscribers" },
+        subscribedToCount: { $size: "$subscribedTo" },
+        isSubscribed: {
+          $cond: {
+            if: {
+              $in: [req.user?._id, "$subscribers.subscriber"],
+            },
+            then: true,
+            else: false,
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        username: 1,
+        avatar: 1,
+        subscribersCount: 1,
+        subscribedToCount: 1,
+        coverImage: 1,
+        fullname: 1,
+        email: 1,
+        isSubscribed: 1,
+        _id: 1,
+      },
+    },
+  ]);
+
+  if (!response.length) throw new ApiError(400, "User does not exists");
+
+  res.status(200).json(response[0]);
+});
+
 export {
   registerUser,
   loginUser,
@@ -280,4 +343,5 @@ export {
   updateAvatar,
   updateCoverImage,
   deleteUser,
+  getUserProfile,
 };

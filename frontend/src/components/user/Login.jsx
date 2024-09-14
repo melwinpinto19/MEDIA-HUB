@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../redux/authSlice";
 import { toast } from "react-toastify";
 import { ThemeToggler } from "./utils";
+import HamburgerMenu from "./utils/Hamburger";
 
 export default function Login() {
   const navigate = useNavigate();

@@ -10,6 +10,7 @@ import {
   ProfileDashboard,
   UserInfo,
   ChangePassword,
+  UserProfile,
 } from "./components/user/profile";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -29,27 +30,20 @@ const router = createBrowserRouter(
         <Route path="change-password" element={<ChangePassword />}></Route>
         <Route path="delete-account" element={<DeleteAccount />}></Route>
       </Route>
+
+      {/* <Route path="/dummy" element={<HomePage />}></Route> */}
+
+      <Route path="/user/:username" element={<UserProfile />}></Route>
     </>
   )
 );
 
 function App() {
-  const dispatch = useDispatch();
+  const dark = useSelector((state) => state.mode.value);
 
-  // initial checking to see if the user is already logged in or not :
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await axios.post("/api/v1/users/get-current-user");
-        res.status >= 200 && res.status <= 300
-          ? dispatch(login(res.data.user))
-          : "";
-      } catch (error) {}
-    })();
-  }, []);
   return (
     <>
-      <ToastContainer autoClose={2000} theme="dark" />
+      <ToastContainer autoClose={2000} theme={`${dark ? "dark" : "light"}`} />
       <RouterProvider router={router}></RouterProvider>
     </>
   );
