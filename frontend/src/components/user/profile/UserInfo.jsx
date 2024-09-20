@@ -79,7 +79,7 @@ export default function ProfilePage() {
       }`}
     >
       <div
-        className="relative h-64 bg-contain bg-no-repeat bg-center"
+        className="relative h-64 bg-cover bg-center "
         style={{ backgroundImage: `url(${coverImage})` }}
       >
         <form

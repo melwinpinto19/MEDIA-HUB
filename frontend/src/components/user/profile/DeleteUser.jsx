@@ -22,7 +22,7 @@ export default function DeleteAccount() {
       setLoading(true);
       // Send DELETE request with the user's password
       const res = await axios.delete("/api/v1/users/delete-account", {
-        data: { password },
+        password,
       });
 
       toast.success("Your account has been deleted successfully.");

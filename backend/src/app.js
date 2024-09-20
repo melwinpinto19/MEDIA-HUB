@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import usersRouter from "./routes/user.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js";
+import videosRouter from "./routes/video.routes.js";
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.use(cookieParser());
 app.use("/api/v1/users", usersRouter);
 // /api/v1/users is the main route and the routers router like /register /login are appneded at the back
 app.use("/api/v1/subscription", subscriptionRouter);
+app.use("/api/v1/videos", videosRouter);
 
 export default app;

@@ -7,15 +7,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { BallTriangle } from "react-loader-spinner";
 import HamburgerMenu from "../utils/Hamburger";
 import { ThemeToggler } from "../utils";
+import { Loader } from "../../../utils";
 
 const ProfileDashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dark = useSelector((state) => state.mode.value);
+  const userExists = useSelector((state) => state.auth.isLoggedIn);
 
   // initial check up to see if the user is logged in or not
   useEffect(() => {
+    if (userExists) {
+      setIsLoggedIn(true);
+      return;
+    }
     (async () => {
       try {
         const res = await axios.post("/api/v1/users/get-current-user");
@@ -31,21 +37,7 @@ const ProfileDashboard = () => {
     })();
   }, []);
 
-  if (!isLoggedIn)
-    return (
-      <div className="grid place-items-center w-full h-screen">
-        <BallTriangle
-          height={100}
-          width={100}
-          radius={5}
-          color="#4fa94d"
-          ariaLabel="ball-triangle-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible={true}
-        />
-      </div>
-    );
+  if (!isLoggedIn) return <Loader type={1} />;
 
   return (
     <div className="h-screen w-full flex">

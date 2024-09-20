@@ -1,3 +1,4 @@
-import Alert from "./Alert";
+import Logo from "./Logo";
+import Loader from "./Loader";
 
-export { Alert };
+export { Logo, Loader };

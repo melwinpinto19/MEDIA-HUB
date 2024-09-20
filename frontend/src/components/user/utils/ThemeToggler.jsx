@@ -20,7 +20,7 @@ const ThemeToggler = () => {
   return (
     <button
       onClick={handleToggle}
-      className={`p-2 rounded-full border-2 fixed top-4 right-4 ${styles.bgCss} transition duration-300 z-40`}
+      className={`p-2 rounded-full border-2 fixed top-4 right-3 ${styles.bgCss} transition duration-300 z-40`}
     >
       {styles.text}
     </button>

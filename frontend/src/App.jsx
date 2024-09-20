@@ -12,12 +12,17 @@ import {
   ChangePassword,
   UserProfile,
 } from "./components/user/profile";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { login, logout } from "./redux/authSlice";
+import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DeleteAccount from "./components/user/profile/DeleteUser";
+import {
+  Home,
+  HomeSearch,
+  CreateVideo,
+  ShowVideos,
+  VideoSearchResults,
+} from "./components/Home";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,6 +34,16 @@ const router = createBrowserRouter(
         <Route path="" element={<UserInfo authRequired={true} />}></Route>
         <Route path="change-password" element={<ChangePassword />}></Route>
         <Route path="delete-account" element={<DeleteAccount />}></Route>
+      </Route>
+
+      <Route path="/home/" element={<Home />}>
+        <Route path="" element={<HomeSearch />}></Route>
+        <Route path="create-video" element={<CreateVideo />}></Route>
+        <Route path="videos" element={<ShowVideos />}></Route>
+        <Route
+          path="videos/search/:query"
+          element={<VideoSearchResults />}
+        ></Route>
       </Route>
 
       {/* <Route path="/dummy" element={<HomePage />}></Route> */}
