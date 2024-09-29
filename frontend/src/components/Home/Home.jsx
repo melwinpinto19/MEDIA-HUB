@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { HomeLink } from "./index";
 import { Outlet } from "react-router";
 import { ThemeToggler } from "../user/utils";
-import { BallTriangle } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Loader, Logo } from "../../utils";
+import { getCurrrentDate } from "../../utils/DateUtil";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -21,6 +22,9 @@ const Home = () => {
       setIsLoggedIn(true);
       return;
     }
+    const { hours, minutes } = getCurrrentDate();
+    if (hours > 22)
+      toast.info("Bed Time", { position: "top-center", autoClose: 500 });
     (async () => {
       try {
         const res = await axios.post("/api/v1/users/get-current-user");
@@ -45,7 +49,7 @@ const Home = () => {
         className={`w-full h-screen ${isDarkMode ? "bg-gray-900" : "bg-white"}`}
       >
         <ThemeToggler />
-        <Logo style="fixed left-2" />
+        <Logo style="fixed left-2 " />
         <div
           className={`w-full ${
             isDarkMode ? "bg-gray-900" : "bg-white"
@@ -55,7 +59,7 @@ const Home = () => {
           <Outlet />
         </div>
         <div
-          className="w-screen  flex items-center justify-center gap-5"
+          className="w-screen  flex items-center justify-center gap-7"
           style={{ height: "8vh", background: "#48CFCB" }}
         >
           <HomeLink text="search" url="/home" icon="magnifying-glass" />
@@ -63,6 +67,11 @@ const Home = () => {
           <HomeLink text="playlists" url="/home/playlist" icon="list" />
           <HomeLink text="Profile" url="/profile" icon="user" />
           <HomeLink text="videos" url="/home/videos" icon="video" />
+          <HomeLink
+            text="Watch History"
+            url="/home/watch-history"
+            icon="clock-rotate-left"
+          />
         </div>
       </div>
     </>

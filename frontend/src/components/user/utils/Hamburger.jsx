@@ -58,9 +58,9 @@ const HamburgerMenu = () => {
 
       <nav
         ref={menuRef}
-        className="fixed top-0 left-0 h-screen w-1/4 bg-red-800 text-white flex justify-center items-center transform -translate-x-full z-40"
+        className="fixed top-0 left-0 h-screen w-1/4 bg-red-800 text-white flex justify-center items-center transform -translate-x-full z-40 max-[768px]:w-20"
       >
-        <Logo style="absolute m-auto -top-1"/>
+        <Logo style="absolute m-auto -top-1 max-[768px]:hidden" />
         <ul className="space-y-6 text-center">
           {[
             {

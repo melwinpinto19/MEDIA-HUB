@@ -58,7 +58,6 @@ export default function Login() {
       try {
         const res = await axios.post("/api/v1/users/login", formData);
         console.log(res);
-        dispatch(login(res.data.data.user));
         toast.success("Logged in successfully");
         setTimeout(() => {
           res?.status >= 200 && res?.status <= 300

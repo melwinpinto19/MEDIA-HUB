@@ -7,8 +7,11 @@ const ListItem = ({ text, url, icon, listRef, index }) => {
       className={` text-white mb-5 w-full justify-center items-center px-4 flex gap-4`}
       ref={(el) => (listRef.current[index] = el)}
     >
-      <i className={`fa-solid fa-${icon}`}></i>
       <NavLink to={url} className="text-2xl hover:text-gray-400">
+        <i className={`fa-solid fa-${icon}`}></i>
+      </NavLink>
+
+      <NavLink to={url} className="text-2xl hover:text-gray-400 max-[768px]:hidden">
         {text}
       </NavLink>
     </li>

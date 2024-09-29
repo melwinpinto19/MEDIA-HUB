@@ -4,6 +4,7 @@ import userModel from "../models/user.model.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 import ApiResponse from "../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -333,6 +334,61 @@ const getUserProfile = asyncHandler(async (req, res, next) => {
   res.status(200).json(response[0]);
 });
 
+const getUserWatchHistory = asyncHandler(async (req, res, next) => {
+  console.log(req.user._id);
+
+  const response = await userModel.aggregate([
+    { $match: { _id: req.user._id } }, // fetching the current user
+    // getting videos from watch history
+    {
+      $lookup: {
+        from: "videos",
+        localField: "watchHistory",
+        foreignField: "_id",
+        pipeline: [
+          {
+            // populating the owner data
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "ownerData",
+            },
+          },
+          {
+            $addFields: {
+              ownerData: {
+                $arrayElemAt: ["$ownerData", 0],
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              title: 1,
+              description: 1,
+              thumbnail: 1,
+              ownerData: 1,
+              views: 1,
+              createdAt: 1,
+            },
+          },
+        ],
+        as: "watchHistory",
+      },
+    },
+    {
+      $project: {
+        watchHistory: 1,
+      },
+    },
+  ]);
+
+  console.log(response);
+
+  res.status(200).json(response[0].watchHistory);
+});
+
 export {
   registerUser,
   loginUser,
@@ -344,4 +400,5 @@ export {
   updateCoverImage,
   deleteUser,
   getUserProfile,
+  getUserWatchHistory,
 };

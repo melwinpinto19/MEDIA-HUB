@@ -34,15 +34,8 @@ const VideoSearchResults = () => {
         className="bg-slate-900 flex flex-wrap content-start gap-5 items-center justify-center  w-full px-12 py-20"
         style={{ height: "92vh" }}
       >
-        {videos.map(({ _id, title, ownerData, thumbnail, duration }, index) => (
-          <EachVideoMeta
-            key={index}
-            title={title}
-            ownerData={ownerData}
-            thumbnail={thumbnail}
-            duration={duration}
-            _id={_id}
-          />
+        {videos.map((data, index) => (
+          <EachVideoMeta videoDetails={data} key={Date.now() * Math.random()} />
         ))}
       </div>
     </>

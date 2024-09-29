@@ -5,6 +5,8 @@ import CreateVideo from "./CreateVideo";
 import ShowVideos from "./ShowVideos";
 import EachVideoMeta from "./EachVideoMeta";
 import VideoSearchResults from "./VideoSearchResults";
+import SingleVideo from "./SingleVideo";
+import WatchHistory from "./WatchHistory";
 
 export {
   Home,
@@ -14,4 +16,6 @@ export {
   ShowVideos,
   EachVideoMeta,
   VideoSearchResults,
+  SingleVideo,
+  WatchHistory,
 };

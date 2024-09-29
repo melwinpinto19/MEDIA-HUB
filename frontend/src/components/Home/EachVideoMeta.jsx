@@ -1,12 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { getFormatFromDiff } from "../../utils/DateUtil";
 
-const VideoCard = ({ _id, title, thumbnail, ownerData, duration, views }) => {
+const VideoCard = ({ videoDetails }) => {
+  const { _id, title, thumbnail, ownerData, duration, views, createdAt } =
+    videoDetails;
+
+  const { days, months, years } = getFormatFromDiff(createdAt);
+
   // Convert duration to hours, minutes, seconds
   const formatDuration = () => {
     const hrs = Math.floor(duration / 3600);
     const mins = Math.floor((duration % 3600) / 60);
-    const secs = duration % 60;
+    const secs = (duration % 60).toPrecision(2);
     return `${hrs > 0 ? `${hrs}:` : ""}${mins}:${
       secs < 10 ? `0${secs}` : secs
     }`;
@@ -44,7 +50,13 @@ const VideoCard = ({ _id, title, thumbnail, ownerData, duration, views }) => {
 
         {/* Views */}
         <div className="mt-4 text-sm">
-          <p>{views} views</p>
+          <p>
+            {years
+              ? `${years} years ago`
+              : months
+              ? `${months} months ago`
+              : `${days} days ago`}
+          </p>
         </div>
       </div>
     </div>

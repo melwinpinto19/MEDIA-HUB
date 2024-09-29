@@ -2,6 +2,8 @@ import videoModel from "../models/video.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 import userModel from "../models/user.model.js";
+import ApiError from "../utils/apiError.js";
+import mongoose from "mongoose";
 
 const getVideosSearchResults = asyncHandler(async (req, res, next) => {
   const { query } = req.body;
@@ -132,6 +134,9 @@ const getAllVideos = asyncHandler(async (req, res, next) => {
         subscriptions: 1,
         subscribers: 1,
         _id: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        views: 1,
       },
     },
   ]);
@@ -178,10 +183,115 @@ const getSearchedVideos = asyncHandler(async (req, res, next) => {
         duration: 1,
         isPublished: 1,
         _id: 1,
+        createdAt: 1,
+        updatedAt: 1,
       },
     },
   ]);
   res.status(200).json({ data: videos });
+});
+
+const getVideo = asyncHandler(async (req, res, next) => {
+  const { id } = req.body;
+  if (!id) throw new ApiError(401, "Video id is required");
+
+  const video = await videoModel.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(id),
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "ownerData",
+      },
+    },
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "owner",
+        foreignField: "subscriber",
+        as: "subscriptions",
+      },
+    },
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "owner",
+        foreignField: "channel",
+        as: "subscribers",
+      },
+    },
+    {
+      $addFields: {
+        ownerData: {
+          $arrayElemAt: ["$ownerData", 0],
+        },
+        subscriptions: {
+          $size: "$subscriptions",
+        },
+        subscribers: {
+          $size: "$subscribers",
+        },
+        isSubscribed: {
+          $cond: {
+            if: {
+              $in: [req.user?._id, "$subscribers.subscriber"],
+            },
+            then: true,
+            else: false,
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        ownerData: 1,
+        title: 1,
+        description: 1,
+        videoFile: 1,
+        thumbnail: 1,
+        duration: 1,
+        isPublished: 1,
+        _id: 1,
+        subscriptions: 1,
+        subscribers: 1,
+        isSubscribed: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        views: 1,
+      },
+    },
+  ]);
+
+  if (!video.length) throw new ApiError(404, "Video not found");
+
+  res.status(200).json(video[0]);
+});
+
+const addViews = asyncHandler(async (req, res) => {
+  const { id } = req.body;
+  console.log(id);
+
+  if (!id) throw new ApiError(401, "Video id is required");
+
+  const video = await videoModel.findOneAndUpdate(
+    { _id: id },
+    { $inc: { views: 1 } },
+    { new: true }
+  );
+
+  if (!video) throw new ApiError(404, "Video not found");
+
+  // add watch history:
+  if (!req.user.watchHistory.includes(id)) req.user.watchHistory.push(id);
+
+  await req.user.save({ validateBeforeSave: false });
+
+  res.status(200).json({ data: "success" });
 });
 
 export {
@@ -190,4 +300,6 @@ export {
   getAllVideos,
   publishVideo,
   getSearchedVideos,
+  getVideo,
+  addViews,
 };

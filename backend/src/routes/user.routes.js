@@ -10,6 +10,7 @@ import {
   updateCoverImage,
   deleteUser,
   getUserProfile,
+  getUserWatchHistory,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import verifyJwt from "../middlewares/logout.middleware.js";
@@ -56,5 +57,7 @@ router
     upload.fields([{ name: "coverImage", maxCount: 1 }]),
     updateCoverImage
   );
+
+router.route("/get-user-watch-history").get(verifyJwt, getUserWatchHistory);
 
 export default router;

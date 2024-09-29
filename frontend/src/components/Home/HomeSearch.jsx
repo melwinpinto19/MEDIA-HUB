@@ -8,6 +8,7 @@ const HomeSearch = () => {
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState([]);
   const navigate = useNavigate();
+  const [searchDisabled, setSearchDisabled] = useState(true);
 
   // Access dark mode state from Redux
   const isDarkMode = useSelector((state) => state.mode.value);
@@ -29,15 +30,18 @@ const HomeSearch = () => {
   const handleChange = (e) => {
     if (e.target.value.length === 0) {
       setQuery("");
+      setSearchDisabled(true);
       setShowResults(false);
       return;
     }
+    setSearchDisabled(false);
     setQuery(e.target.value);
     getSearchResults();
   };
 
   const clearQuery = () => {
     setQuery("");
+    setSearchDisabled(true);
     setShowResults(false);
   };
 
@@ -56,7 +60,7 @@ const HomeSearch = () => {
   return (
     <div className={`relative w-full max-w-lg mx-auto py-5 ${containerStyle}`}>
       {/* Search Input */}
-      <div className="flex items-center justify-center gap-5">
+      <div className="flex items-center justify-center gap-5 max-[972px]:mt-20">
         <div className="relative">
           <input
             type="text"
@@ -80,6 +84,7 @@ const HomeSearch = () => {
         <button
           className="px-8 py-4 bg-blue-700 rounded-full grid place-items-center"
           onClick={search}
+          disabled={searchDisabled}
         >
           Search
         </button>

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
-import ListItem from "./ListItem";
 import axios from "axios";
 import { login } from "../../../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { BallTriangle } from "react-loader-spinner";
 import HamburgerMenu from "../utils/Hamburger";
 import { ThemeToggler } from "../utils";
 import { Loader } from "../../../utils";
+import { toast } from "react-toastify";
+import { getCurrrentDate } from "../../../utils/DateUtil";
 
 const ProfileDashboard = () => {
   const navigate = useNavigate();
@@ -22,6 +22,9 @@ const ProfileDashboard = () => {
       setIsLoggedIn(true);
       return;
     }
+    const { hours, minutes } = getCurrrentDate();
+    if (hours > 22)
+      toast.info("Bed Time", { position: "top-center", autoClose: 500 });
     (async () => {
       try {
         const res = await axios.post("/api/v1/users/get-current-user");

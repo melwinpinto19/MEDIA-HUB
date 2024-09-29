@@ -4,6 +4,8 @@ import {
   createVideo,
   getAllVideos,
   getSearchedVideos,
+  getVideo,
+  addViews,
 } from "../controllers/video.controller.js";
 import verifyJwt from "../middlewares/logout.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -24,5 +26,9 @@ router.route("/create-video").post(
 router.route("/getAllVideos").get(verifyJwt, getAllVideos);
 
 router.route("/getSearchedVideos").post(verifyJwt, getSearchedVideos);
+
+router.route("/getVideo").post(verifyJwt, getVideo);
+
+router.route("/add-views").post(verifyJwt, addViews);
 
 export default router;

@@ -22,6 +22,8 @@ import {
   CreateVideo,
   ShowVideos,
   VideoSearchResults,
+  SingleVideo,
+  WatchHistory,
 } from "./components/Home";
 
 const router = createBrowserRouter(
@@ -40,10 +42,12 @@ const router = createBrowserRouter(
         <Route path="" element={<HomeSearch />}></Route>
         <Route path="create-video" element={<CreateVideo />}></Route>
         <Route path="videos" element={<ShowVideos />}></Route>
+        <Route path="videos/video/:id" element={<SingleVideo />}></Route>
         <Route
           path="videos/search/:query"
           element={<VideoSearchResults />}
         ></Route>
+        <Route path="watch-history" element={<WatchHistory />}></Route>
       </Route>
 
       {/* <Route path="/dummy" element={<HomePage />}></Route> */}
