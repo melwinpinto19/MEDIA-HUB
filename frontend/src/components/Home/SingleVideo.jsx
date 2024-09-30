@@ -122,6 +122,9 @@ const SingleVideo = () => {
           </span>
         </div>
       </div>
+      <div className="mb-3 text-1xl">
+        <i class="fa-solid fa-thumbs-up text-blue-600"></i> Like
+      </div>
 
       {/* Channel Info */}
       <div className="flex justify-between items-start">
