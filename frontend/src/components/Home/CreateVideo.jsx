@@ -73,6 +73,8 @@ const CreateVideo = () => {
     } catch (error) {
       setResLoading(false);
       toast.error("Failed to upload the video");
+      console.log(error);
+      
     }
   };
 

@@ -3,10 +3,12 @@ import { EachVideoMeta } from "./index";
 import axios from "axios";
 import { Loader } from "../../utils";
 import { shuffleArray } from "../../utils/ArrayUtil";
+import { useSelector } from "react-redux";
 
 const ShowVideos = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const mode = useSelector((state) => state.mode.value);
 
   const loadVideos = async () => {
     try {
@@ -28,9 +30,14 @@ const ShowVideos = () => {
   return (
     <>
       <div
-        className="bg-slate-900 flex flex-wrap content-start gap-5 items-center justify-center  w-full px-12 py-20"
+        className={`${
+          mode ? "bg-slate-900" : "bg-white"
+        } flex flex-wrap  gap-5 items-center justify-center  w-full px-2 py-20`}
         style={{ height: "92vh" }}
       >
+        {videos.map((data, index) => (
+          <EachVideoMeta videoDetails={data} key={Date.now() * Math.random()} />
+        ))}
         {videos.map((data, index) => (
           <EachVideoMeta videoDetails={data} key={Date.now() * Math.random()} />
         ))}

@@ -226,6 +226,14 @@ const getVideo = asyncHandler(async (req, res, next) => {
       },
     },
     {
+      $lookup: {
+        from: "likes",
+        localField: "_id",
+        foreignField: "video",
+        as: "likes",
+      },
+    },
+    {
       $addFields: {
         ownerData: {
           $arrayElemAt: ["$ownerData", 0],
@@ -240,6 +248,18 @@ const getVideo = asyncHandler(async (req, res, next) => {
           $cond: {
             if: {
               $in: [req.user?._id, "$subscribers.subscriber"],
+            },
+            then: true,
+            else: false,
+          },
+        },
+        likes: {
+          $size: "$likes",
+        },
+        isLiked: {
+          $cond: {
+            if: {
+              $in: [req.user?._id, "$likes.likedBy"],
             },
             then: true,
             else: false,
@@ -263,6 +283,8 @@ const getVideo = asyncHandler(async (req, res, next) => {
         createdAt: 1,
         updatedAt: 1,
         views: 1,
+        likes: 1,
+        isLiked: 1,
       },
     },
   ]);

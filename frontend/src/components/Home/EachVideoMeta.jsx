@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { getFormatFromDiff } from "../../utils/DateUtil";
+import { useSelector } from "react-redux";
 
 const VideoCard = ({ videoDetails }) => {
   const { _id, title, thumbnail, ownerData, duration, views, createdAt } =
     videoDetails;
+  const mode = useSelector((state) => state.mode.value);
 
   const { days, months, years } = getFormatFromDiff(createdAt);
 
@@ -19,14 +21,20 @@ const VideoCard = ({ videoDetails }) => {
   };
 
   return (
-    <div className="bg-gray-900 text-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 w-full max-w-sm">
+    <div
+      className={`${
+        mode ? "bg-gray-900 text-white" : "bg-white text-black"
+      }  rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 max-[738px]:w-100`}
+      style={{ width: "350px" }}
+    >
       {/* Thumbnail section */}
-      <div className="relative">
+      <div className="relative jus">
         <Link to={`/home/videos/video/${_id}`}>
           <img
             src={thumbnail}
             alt="Video thumbnail"
             className="w-full h-40 object-cover"
+            loading="lazy"
           />
         </Link>
         {/* Duration overlay */}

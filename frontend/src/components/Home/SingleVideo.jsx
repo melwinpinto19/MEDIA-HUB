@@ -13,6 +13,7 @@ const SingleVideo = () => {
   const [videoData, setVideoData] = useState({});
   const { id } = useParams();
   const [timeSinceUploaded, setTimeSinceUploaded] = useState({});
+  const [flag, setFlag] = useState(true);
 
   // subscription stuff :
   const [subscribed, setSubscribed] = useState(null);
@@ -38,6 +39,30 @@ const SingleVideo = () => {
     }
   };
 
+  // likes stuff :
+
+  const [liked, setLiked] = useState(false);
+
+  const addVideoLike = async () => {
+    try {
+      const res = await axios.post("/api/v1/likes/add-video-like", {
+        id,
+      });
+      loadVideoData();
+      setLiked(true);
+    } catch (error) {}
+  };
+
+  const removeVideoLike = async () => {
+    try {
+      const res = await axios.post("/api/v1/likes/remove-video-like", {
+        id,
+      });
+      loadVideoData();
+      setLiked(false);
+    } catch (error) {}
+  };
+
   const addViews = async () => {
     try {
       await axios.post("/api/v1/videos/add-views", {
@@ -46,6 +71,7 @@ const SingleVideo = () => {
     } catch (error) {
       console.log("Failed to add views");
     }
+    setFlag(false);
   };
 
   const loadVideoData = async () => {
@@ -53,12 +79,14 @@ const SingleVideo = () => {
       const res = await axios.post("/api/v1/videos/getVideo", {
         id,
       });
+
       setVideoData(res.data);
       setLoading(false);
       setSubscribed(res.data.isSubscribed);
+      setLiked(res.data.isLiked);
       const { days, months, years } = getFormatFromDiff(res.data.createdAt);
       setTimeSinceUploaded({ days, months, years });
-      addViews();
+      if (flag) addViews();
     } catch (error) {
       toast.error("Failed to load video data");
     }
@@ -122,8 +150,12 @@ const SingleVideo = () => {
           </span>
         </div>
       </div>
-      <div className="mb-3 text-1xl">
-        <i class="fa-solid fa-thumbs-up text-blue-600"></i> Like
+      <div className="mb-3 text-1xl bg-gray-700 rounded-full px-3 py-1 w-24">
+        <i
+          className={`fa-solid fa-thumbs-up ${liked ? "text-blue-600" : ""}`}
+          onClick={liked ? removeVideoLike : addVideoLike}
+        ></i>{" "}
+        {videoData.likes} likes
       </div>
 
       {/* Channel Info */}

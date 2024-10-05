@@ -16,7 +16,9 @@ const WatchHistory = ({ videos = [] }) => {
   const descriptionStyle = isDarkMode ? "text-gray-400" : "text-gray-600";
 
   const dateStr = (createdAt) => {
-    const { days, months, years } = getUTCFormatFromDiff(createdAt);
+    const { days, months, years } = getFormatFromDiff(createdAt);
+    console.log(years, months, days);
+
     return years
       ? `${years} years ago`
       : months
@@ -53,11 +55,21 @@ const WatchHistory = ({ videos = [] }) => {
               <h3 className={`text-lg font-semibold ${titleStyle}`}>
                 {video.title}
               </h3>
-              <h3 className={` font-semibold ${titleStyle}`}>
-                {video.ownerData.username === user.username
-                  ? "You"
-                  : video.ownerData.username}
-              </h3>
+              <div className="flex items-center gap-2">
+                {" "}
+                <img
+                  src={video.ownerData.avatar}
+                  alt=""
+                  height={30}
+                  width={30}
+                  className="rounded-full object-cover"
+                />
+                <h3 className={` font-semibold ${titleStyle}`}>
+                  {video.ownerData.username === user.username
+                    ? "You"
+                    : video.ownerData.username}
+                </h3>
+              </div>
               <p className={`text-sm ${descriptionStyle}`}>
                 Views: {video.views}
               </p>{" "}

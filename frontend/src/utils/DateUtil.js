@@ -20,7 +20,11 @@ const getUTCFormatFromDiff = (createdAt) => {
 
   console.log(date1.getTime());
 
-  return { days: date2.getDate() - date1.getUTCDate() };
+  return {
+    days: date2.getDate() - date1.getUTCDate(),
+    months: date2.getMonth() - date1.getUTCMonth(),
+    years: date2.getFullYear() - date1.getUTCFullYear(),
+  };
 };
 
 const getCurrrentDate = () => {
