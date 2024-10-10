@@ -7,6 +7,8 @@ import EachVideoMeta from "./EachVideoMeta";
 import VideoSearchResults from "./VideoSearchResults";
 import SingleVideo from "./SingleVideo";
 import WatchHistory from "./WatchHistory";
+import Playlist from "./Playlist";
+import SinglePlaylist from "./SinglePlaylist";
 
 export {
   Home,
@@ -18,4 +20,6 @@ export {
   VideoSearchResults,
   SingleVideo,
   WatchHistory,
+  Playlist,
+  SinglePlaylist,
 };

@@ -24,6 +24,8 @@ import {
   VideoSearchResults,
   SingleVideo,
   WatchHistory,
+  Playlist,
+  SinglePlaylist,
 } from "./components/Home";
 
 const router = createBrowserRouter(
@@ -48,6 +50,11 @@ const router = createBrowserRouter(
           element={<VideoSearchResults />}
         ></Route>
         <Route path="watch-history" element={<WatchHistory />}></Route>
+        <Route path="playlist" element={<Playlist />}></Route>
+        <Route
+          path="playlists/playlist/:playlistId"
+          element={<SinglePlaylist />}
+        ></Route>
       </Route>
 
       {/* <Route path="/dummy" element={<HomePage />}></Route> */}

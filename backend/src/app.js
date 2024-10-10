@@ -5,6 +5,7 @@ import usersRouter from "./routes/user.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js";
 import videosRouter from "./routes/video.routes.js";
 import likesRouter from "./routes/like.routes.js";
+import playlistRouter from "./routes/playlist.routes.js";
 
 const app = express();
 
@@ -28,5 +29,6 @@ app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/subscription", subscriptionRouter);
 app.use("/api/v1/videos", videosRouter);
 app.use("/api/v1/likes", likesRouter);
+app.use("/api/v1/playlist", playlistRouter);
 
 export default app;
