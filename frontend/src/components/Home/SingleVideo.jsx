@@ -122,9 +122,12 @@ const SingleVideo = () => {
       </div>
 
       {/* Video Information */}
-      <div className="">
+      <div className="flex items-center justify-between">
         {" "}
         <h1 className="text-2xl font-bold mb-2">{videoData.title}</h1>
+        <div className="bg-blue-700 text-black py-2 px-2">
+          Add to playlist <i className="fa-solid fa-plus"></i>
+        </div>
       </div>
 
       <div className="flex justify-between items-center mb-4 gap-6 ">

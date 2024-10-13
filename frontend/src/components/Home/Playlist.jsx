@@ -4,6 +4,7 @@ import { useSelector } from "react-redux"; // Import Redux to access dark mode s
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const PlaylistsComponent = () => {
   const [showForm, setShowForm] = useState(false);
@@ -256,7 +257,7 @@ const PlaylistsComponent = () => {
 };
 
 const PlaylistItem = ({ data, onDelete }) => {
-  const { thumbnail, name, description, videos } = data;
+  const { thumbnail, name, description, videos, _id } = data;
   const dark = useSelector((state) => state.mode.value);
   return (
     <div
@@ -265,11 +266,13 @@ const PlaylistItem = ({ data, onDelete }) => {
       } shadow-md rounded-lg p-4 flex items-center space-x-4`}
     >
       {/* Playlist Thumbnail */}
-      <img
-        src={thumbnail}
-        alt={name}
-        className=" rounded-lg object-cover w-80 h-40 max-[869px]:w-2/4"
-      />
+      <Link to={`/home/playlists/playlist/${_id}`}>
+        <img
+          src={thumbnail}
+          alt={name}
+          className=" rounded-lg object-cover w-80 h-40 max-[869px]:w-2/4"
+        />
+      </Link>
 
       {/* Playlist Details */}
       <div className="flex-1 max-[869px]:w-2/4">

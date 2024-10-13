@@ -6,6 +6,7 @@ import {
   getAllPlaylists,
   deletePlaylist,
   getPlaylist,
+  addVideoToPlaylist,
 } from "../controllers/playlist.controller.js";
 
 const router = Router();
@@ -25,5 +26,7 @@ router.get("/getAllPlaylists", verifyJwt, getAllPlaylists);
 router.route("/delete-playlist").post(verifyJwt, deletePlaylist);
 
 router.get("/playlists/:id", verifyJwt, getPlaylist);
+
+router.post("/add-video", verifyJwt, addVideoToPlaylist);
 
 export default router;

@@ -56,18 +56,18 @@ const getPlaylist = asyncHandler(async (req, res) => {
   if (!id) throw new ApiError(401, "Playlist id is required");
 
   const playlist = await playlistModel.aggregate([
+    // matching the playlist :
     {
       $match: {
-        _id: mongoose.Types.ObjectId(id),
-        owner: mongoose.Types.ObjectId(req.user._id),
+        _id: new mongoose.Types.ObjectId(id),
+        owner: new mongoose.Types.ObjectId(req.user._id),
       },
     },
+    // populating videos :
     {
       $lookup: {
         from: "videos",
         localField: "videos",
-        foreignField: "_id",
-        as: "videos",
         pipeline: [
           {
             $lookup: {
@@ -95,9 +95,13 @@ const getPlaylist = asyncHandler(async (req, res) => {
               isPublished: 1,
               _id: 1,
               views: 1,
+              createdAt: 1,
+              updatedAt: 1,
             },
           },
         ],
+        foreignField: "_id",
+        as: "videos",
       },
     },
     {
@@ -118,9 +122,30 @@ const getPlaylist = asyncHandler(async (req, res) => {
   res.status(200).json({ data: playlist[0] });
 });
 
+const addVideoToPlaylist = asyncHandler(async (req, res) => {
+  if (!req.body.playlistId) throw new ApiError(401, "Playlist id is required");
+  if (!req.body.videoId) throw new ApiError(401, "Video id is required");
+
+  const playlist = await playlistModel.findOneAndUpdate(
+    { _id: req.body.playlistId },
+    { $push: { videos: req.body.videoId } },
+    { new: true }
+  );
+
+  if (!playlist) throw new ApiError(404, "Playlist not found");
+
+  res.status(200).json({ data: playlist });
+});
+
 const getAllPlaylists = asyncHandler(async (req, res) => {
   const playlists = await playlistModel.find({ owner: req.user._id });
   res.status(200).json({ data: playlists });
 });
 
-export { createPlaylist, getAllPlaylists, deletePlaylist, getPlaylist };
+export {
+  createPlaylist,
+  getAllPlaylists,
+  deletePlaylist,
+  getPlaylist,
+  addVideoToPlaylist,
+};
