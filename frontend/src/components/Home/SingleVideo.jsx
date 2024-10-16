@@ -6,6 +6,108 @@ import { toast } from "react-toastify";
 import { useParams } from "react-router";
 import { getFormatFromDiff } from "../../utils/DateUtil";
 
+const PlaylistModal = ({ playlists = [], isOpen, onClose, videoId }) => {
+  if (!isOpen) return null; // Return null if the modal is not open
+
+  const addToPlaylist = async (playlistId) => {
+    try {
+      const response = await axios.post("/api/v1/playlist/add-video", {
+        playlistId,
+        videoId,
+      });
+      toast.success("Video is added sucessfully to the playlist");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-gray-800 w-11/12 md:w-1/2 lg:w-1/3 rounded-lg shadow-lg p-6 relative">
+        {/* Close Button */}
+        <button
+          className="absolute top-3 right-3 text-gray-600 dark:text-gray-200 hover:text-gray-900"
+          onClick={onClose}
+        >
+          <i className="fa-solid fa-xmark"></i>
+        </button>
+
+        {/* Modal Title */}
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          Select a Playlist
+        </h2>
+
+        {/* Playlist List */}
+        <div className="space-y-4">
+          {playlists.map((playlist) => (
+            <div
+              key={playlist._id}
+              className="flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+            >
+              <div>
+                {/* Playlist Name */}
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                  {playlist.name}
+                </h3>
+
+                {/* Truncated Description */}
+                <p className="text-sm text-gray-600 dark:text-gray-300 truncate overflow-ellipsis w-80">
+                  {playlist.description}
+                </p>
+              </div>
+
+              {/* Plus Icon */}
+              <button
+                className="text-blue-500 hover:text-blue-700"
+                onClick={() => addToPlaylist(playlist._id)}
+              >
+                <i className="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const App = ({ videoId }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get("/api/v1/playlist/getAllPlaylists");
+        setPlaylists(response.data.data);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
+
+  const [playlists, setPlaylists] = useState([]);
+
+  return (
+    <div className="">
+      {/* Button to open the modal */}
+      <button
+        className="bg-blue-500 text-white py-2 px-4 rounded-lg"
+        onClick={() => setModalOpen(true)}
+      >
+        Add to playlist
+      </button>
+
+      {/* Modal */}
+      <PlaylistModal
+        playlists={playlists}
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        videoId={videoId}
+      />
+    </div>
+  );
+};
+
 const SingleVideo = () => {
   // Access dark mode state from Redux
   const isDarkMode = useSelector((state) => state.mode.value);
@@ -125,9 +227,7 @@ const SingleVideo = () => {
       <div className="flex items-center justify-between">
         {" "}
         <h1 className="text-2xl font-bold mb-2">{videoData.title}</h1>
-        <div className="bg-blue-700 text-black py-2 px-2">
-          Add to playlist <i className="fa-solid fa-plus"></i>
-        </div>
+        <App videoId={videoData._id} />
       </div>
 
       <div className="flex justify-between items-center mb-4 gap-6 ">

@@ -6,6 +6,7 @@ import { useParams } from "react-router";
 import { EachVideoMeta } from "./index";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const SinglePlaylist = () => {
   const { playlistId } = useParams();
@@ -31,6 +32,22 @@ const SinglePlaylist = () => {
     };
     fetchPlaylistDetails();
   }, [playlistId]);
+
+  const deleteVideoFromPlaylist = async (videoId) => {
+    try {
+      const response = await axios.post(
+        `/api/v1/playlist/delete-video/`,
+        {
+          playlistId,
+          videoId,
+        } // Replace with your API
+      );
+      toast.success("Video deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete video");
+      console.error("Error deleting video from playlist", error);
+    }
+  };
 
   const formatDuration = (duration) => {
     const hrs = Math.floor(duration / 3600);
@@ -63,7 +80,6 @@ const SinglePlaylist = () => {
       </div>
     );
   }
-
   return (
     <div className={`p-6 min-h-screen ${containerStyle} py-20 bg-slate-950`}>
       {/* Playlist Info */}
@@ -94,8 +110,18 @@ const SinglePlaylist = () => {
         {playlist?.videos.map((video) => (
           <div
             key={video._id}
-            className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
+            className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden relative"
           >
+            <div
+              className="absolute top-1 right-1 bg-white grid place-items-center z-10 p-2"
+              onClick={() => {
+                deleteVideoFromPlaylist(video._id);
+              }}
+            >
+              {" "}
+              <i className="fa-solid fa-trash text-red-600 cursor-pointer "></i>
+            </div>
+
             <Link to={`/home/videos/video/${video._id}`}>
               <img
                 src={video.thumbnail}

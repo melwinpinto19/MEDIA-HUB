@@ -7,6 +7,7 @@ import {
   deletePlaylist,
   getPlaylist,
   addVideoToPlaylist,
+  deleteVideoFromPlaylist,
 } from "../controllers/playlist.controller.js";
 
 const router = Router();
@@ -28,5 +29,7 @@ router.route("/delete-playlist").post(verifyJwt, deletePlaylist);
 router.get("/playlists/:id", verifyJwt, getPlaylist);
 
 router.post("/add-video", verifyJwt, addVideoToPlaylist);
+
+router.post("/delete-video", verifyJwt, deleteVideoFromPlaylist);
 
 export default router;

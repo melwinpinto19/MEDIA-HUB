@@ -126,6 +126,12 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
   if (!req.body.playlistId) throw new ApiError(401, "Playlist id is required");
   if (!req.body.videoId) throw new ApiError(401, "Video id is required");
 
+  const playlist1 = await playlistModel.findOne({ _id: req.body.playlistId });
+
+  if (playlist1.videos.includes(req.body.videoId)) {
+    throw new ApiError(401, "Video already in playlist");
+  }
+
   const playlist = await playlistModel.findOneAndUpdate(
     { _id: req.body.playlistId },
     { $push: { videos: req.body.videoId } },
@@ -133,6 +139,21 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
   );
 
   if (!playlist) throw new ApiError(404, "Playlist not found");
+
+  res.status(200).json({ data: playlist });
+});
+
+const deleteVideoFromPlaylist = asyncHandler(async (req, res) => {
+  if (!req.body.playlistId) throw new ApiError(401, "Playlist id is required");
+  if (!req.body.videoId) throw new ApiError(401, "Video id is required");
+
+  const playlist = await playlistModel.findOneAndUpdate(
+    { _id: req.body.playlistId },
+    { $pull: { videos: req.body.videoId } },
+    { new: true }
+  );
+
+  if (!playlist) throw new ApiError(404, "Playlist not found"); // playlist not found
 
   res.status(200).json({ data: playlist });
 });
@@ -148,4 +169,5 @@ export {
   deletePlaylist,
   getPlaylist,
   addVideoToPlaylist,
+  deleteVideoFromPlaylist
 };
