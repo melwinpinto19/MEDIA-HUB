@@ -9,6 +9,7 @@ import SingleVideo from "./SingleVideo";
 import WatchHistory from "./WatchHistory";
 import Playlist from "./Playlist";
 import SinglePlaylist from "./SinglePlaylist";
+import Comments from "./Comments";
 
 export {
   Home,
@@ -22,4 +23,5 @@ export {
   WatchHistory,
   Playlist,
   SinglePlaylist,
+  Comments
 };

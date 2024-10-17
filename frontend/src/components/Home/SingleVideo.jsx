@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useParams } from "react-router";
 import { getFormatFromDiff } from "../../utils/DateUtil";
+import { Comments } from "./index";
 
 const PlaylistModal = ({ playlists = [], isOpen, onClose, videoId }) => {
   if (!isOpen) return null; // Return null if the modal is not open
@@ -22,52 +23,54 @@ const PlaylistModal = ({ playlists = [], isOpen, onClose, videoId }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 w-11/12 md:w-1/2 lg:w-1/3 rounded-lg shadow-lg p-6 relative">
-        {/* Close Button */}
-        <button
-          className="absolute top-3 right-3 text-gray-600 dark:text-gray-200 hover:text-gray-900"
-          onClick={onClose}
-        >
-          <i className="fa-solid fa-xmark"></i>
-        </button>
+    <>
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white dark:bg-gray-800 w-11/12 md:w-1/2 lg:w-1/3 rounded-lg shadow-lg p-6 relative">
+          {/* Close Button */}
+          <button
+            className="absolute top-3 right-3 text-gray-600 dark:text-gray-200 hover:text-gray-900"
+            onClick={onClose}
+          >
+            <i className="fa-solid fa-xmark"></i>
+          </button>
 
-        {/* Modal Title */}
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-          Select a Playlist
-        </h2>
+          {/* Modal Title */}
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+            Select a Playlist
+          </h2>
 
-        {/* Playlist List */}
-        <div className="space-y-4">
-          {playlists.map((playlist) => (
-            <div
-              key={playlist._id}
-              className="flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-            >
-              <div>
-                {/* Playlist Name */}
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                  {playlist.name}
-                </h3>
-
-                {/* Truncated Description */}
-                <p className="text-sm text-gray-600 dark:text-gray-300 truncate overflow-ellipsis w-80">
-                  {playlist.description}
-                </p>
-              </div>
-
-              {/* Plus Icon */}
-              <button
-                className="text-blue-500 hover:text-blue-700"
-                onClick={() => addToPlaylist(playlist._id)}
+          {/* Playlist List */}
+          <div className="space-y-4">
+            {playlists.map((playlist) => (
+              <div
+                key={playlist._id}
+                className="flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition"
               >
-                <i className="fa-solid fa-plus"></i>
-              </button>
-            </div>
-          ))}
+                <div>
+                  {/* Playlist Name */}
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    {playlist.name}
+                  </h3>
+
+                  {/* Truncated Description */}
+                  <p className="text-sm text-gray-600 dark:text-gray-300 truncate overflow-ellipsis w-80">
+                    {playlist.description}
+                  </p>
+                </div>
+
+                {/* Plus Icon */}
+                <button
+                  className="text-blue-500 hover:text-blue-700"
+                  onClick={() => addToPlaylist(playlist._id)}
+                >
+                  <i className="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -298,6 +301,8 @@ const SingleVideo = () => {
           {videoData.description}
         </p>
       </div>
+
+      <Comments videoId={videoData._id}/>
     </div>
   );
 };

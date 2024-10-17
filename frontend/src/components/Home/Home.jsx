@@ -49,7 +49,7 @@ const Home = () => {
         className={`w-full h-screen ${isDarkMode ? "bg-gray-900" : "bg-white"}`}
       >
         <ThemeToggler />
-        <Logo style="fixed left-2 " />
+        {/* <Logo style="fixed left-2 " /> */}
         <div
           className={`w-full ${
             isDarkMode ? "bg-gray-900" : "bg-white"
