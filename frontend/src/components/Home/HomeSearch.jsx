@@ -14,6 +14,8 @@ const HomeSearch = () => {
   const isDarkMode = useSelector((state) => state.mode.value);
 
   const search = () => {
+    setResults([]);
+    setShowResults(false);
     navigate(`/home/videos/search/${query}`);
   };
 
@@ -35,6 +37,7 @@ const HomeSearch = () => {
       return;
     }
     setSearchDisabled(false);
+    setShowResults(false);
     setQuery(e.target.value);
     getSearchResults();
   };
@@ -58,7 +61,7 @@ const HomeSearch = () => {
     : "hover:bg-blue-50 text-gray-700";
 
   return (
-    <div className={`relative w-full max-w-lg mx-auto py-5 ${containerStyle}`}>
+    <div className={`relative w-full max-w-lg mx-auto  `}>
       {/* Search Input */}
       <div className="flex items-center justify-center gap-5 max-[972px]:mt-20">
         <div className="relative">

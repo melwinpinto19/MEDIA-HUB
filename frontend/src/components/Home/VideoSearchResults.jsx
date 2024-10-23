@@ -24,7 +24,7 @@ const VideoSearchResults = () => {
 
   useEffect(() => {
     loadVideos();
-  }, []);
+  }, [query]);
 
   if (loading) return <Loader />;
 

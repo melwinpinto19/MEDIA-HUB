@@ -27,7 +27,7 @@ const WatchHistory = ({ videos = [] }) => {
   };
 
   return (
-    <div className={`p-4 rounded-lg shadow-lg ${containerStyle} mt-20`}>
+    <div className={`p-4 rounded-lg shadow-lg ${containerStyle} mt-2`}>
       <h2 className={`text-2xl font-bold mb-4 ${titleStyle}`}>Watch History</h2>
       <div
         className="flex overflow-x-auto space-x-4 py-4 w-full"

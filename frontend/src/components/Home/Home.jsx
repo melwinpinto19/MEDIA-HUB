@@ -9,6 +9,7 @@ import axios from "axios";
 import { Loader, Logo } from "../../utils";
 import { getCurrrentDate } from "../../utils/DateUtil";
 import { toast } from "react-toastify";
+import { Navbar } from "./index";
 
 const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -46,20 +47,23 @@ const Home = () => {
   return (
     <>
       <div
-        className={`w-full h-screen ${isDarkMode ? "bg-gray-900" : "bg-white"}`}
+        className={`w-full h-screen ${
+          isDarkMode ? "bg-slate-950" : "bg-white"
+        }`}
       >
+        <Navbar />
         <ThemeToggler />
         {/* <Logo style="fixed left-2 " /> */}
         <div
           className={`w-full ${
-            isDarkMode ? "bg-gray-900" : "bg-white"
+            isDarkMode ? "bg-slate-950" : "bg-white"
           } overflow-auto`}
           style={{ height: "92vh" }}
         >
           <Outlet />
         </div>
         <div
-          className="w-screen  flex items-center justify-center gap-7"
+          className="w-screen fixed bottom-0 flex items-center justify-center gap-7"
           style={{ height: "8vh", background: "#48CFCB" }}
         >
           <HomeLink text="search" url="/home" icon="magnifying-glass" />

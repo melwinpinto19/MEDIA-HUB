@@ -12,7 +12,9 @@ const modeSlice = createSlice({
   reducers: {
     toggleMode(state, action) {
       state.value = !state.value;
-      Cookies.set("mode", state.value ? "dark" : "light");
+      Cookies.set("mode", state.value ? "dark" : "light", {
+        expires: 7,
+      });
     },
   },
 });

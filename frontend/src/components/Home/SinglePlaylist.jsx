@@ -7,10 +7,11 @@ import { EachVideoMeta } from "./index";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { NoContentMessage } from "../../utils";
 
 const SinglePlaylist = () => {
   const { playlistId } = useParams();
-  const [playlist, setPlaylist] = useState(null); // State to store playlist data
+  const [playlist, setPlaylist] = useState({}); // State to store playlist data
   const [loading, setLoading] = useState(true); // State to manage loading state
 
   // Access dark mode state from Redux
@@ -42,6 +43,10 @@ const SinglePlaylist = () => {
           videoId,
         } // Replace with your API
       );
+      const filteredVideo = playlist.videos.filter(
+        (video) => video._id !== videoId
+      );
+      setPlaylist({ ...playlist, videos: filteredVideo });
       toast.success("Video deleted successfully");
     } catch (error) {
       toast.error("Failed to delete video");
@@ -60,13 +65,13 @@ const SinglePlaylist = () => {
 
   // Styles based on dark mode
   const containerStyle = isDarkMode
-    ? "bg-gray-900 text-gray-100"
+    ? "bg-slate-950 text-gray-100"
     : "bg-white text-gray-900";
 
   // Skeleton for loading state
   if (loading) {
     return (
-      <div className={`p-6 ${containerStyle} my-20`}>
+      <div className={`p-6 ${containerStyle} my-2`}>
         <Skeleton height={40} width={300} /> {/* Playlist Name */}
         <Skeleton height={20} width={500} className="mt-4" />{" "}
         {/* Description */}
@@ -81,7 +86,7 @@ const SinglePlaylist = () => {
     );
   }
   return (
-    <div className={`p-6 min-h-screen ${containerStyle} py-20 bg-slate-950`}>
+    <div className={`p-6 min-h-screen ${containerStyle} py-2 `}>
       {/* Playlist Info */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between ">
         <div>
@@ -107,13 +112,16 @@ const SinglePlaylist = () => {
       <div className="text-2xl font-semibold">Your Videos</div>
       {/* Videos Section */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {playlist?.videos.length === 0 && <NoContentMessage message={"No videos found"}/>}
         {playlist?.videos.map((video) => (
           <div
             key={video._id}
-            className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden relative"
+            className={`bg-gray-100 ${
+              isDarkMode ? "dark:bg-slate-800" : ""
+            } rounded-lg shadow-lg overflow-hidden relative`}
           >
             <div
-              className="absolute top-1 right-1 bg-white grid place-items-center z-10 p-2"
+              className="absolute  top-1 right-1  grid place-items-center -z-1 p-2"
               onClick={() => {
                 deleteVideoFromPlaylist(video._id);
               }}

@@ -98,7 +98,7 @@ const CreateVideo = () => {
 
   // Define styles for dark and light modes
   const containerStyle = isDarkMode
-    ? "bg-gray-800 text-gray-300"
+    ? "bg-slate-950 text-gray-300"
     : "bg-white text-gray-700";
   const inputStyle = isDarkMode
     ? "bg-gray-700 text-gray-300 border-gray-600"

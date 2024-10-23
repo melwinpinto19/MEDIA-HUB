@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Navigate } from "react-router-dom";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -11,6 +12,8 @@ import {
   UserInfo,
   ChangePassword,
   UserProfile,
+  Dashboard,
+  Test,
 } from "./components/user/profile";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
@@ -18,7 +21,6 @@ import "react-toastify/dist/ReactToastify.css";
 import DeleteAccount from "./components/user/profile/DeleteUser";
 import {
   Home,
-  HomeSearch,
   CreateVideo,
   ShowVideos,
   VideoSearchResults,
@@ -26,11 +28,15 @@ import {
   WatchHistory,
   Playlist,
   SinglePlaylist,
+  EditVideo,
 } from "./components/Home";
+import ErrorPage from "./utils/ErrorPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
+      <Route path="/" element={<Navigate to="/home" />} />
+
       <Route path="/login" element={<Login />}></Route>
       <Route path="/register" element={<Register />}></Route>
 
@@ -38,10 +44,11 @@ const router = createBrowserRouter(
         <Route path="" element={<UserInfo authRequired={true} />}></Route>
         <Route path="change-password" element={<ChangePassword />}></Route>
         <Route path="delete-account" element={<DeleteAccount />}></Route>
+        <Route path="dashboard" element={<Dashboard />}></Route>
       </Route>
 
       <Route path="/home/" element={<Home />}>
-        <Route path="" element={<HomeSearch />}></Route>
+        <Route path="" element={<Navigate to="/home/videos" />}></Route>
         <Route path="create-video" element={<CreateVideo />}></Route>
         <Route path="videos" element={<ShowVideos />}></Route>
         <Route path="videos/video/:id" element={<SingleVideo />}></Route>
@@ -55,9 +62,12 @@ const router = createBrowserRouter(
           path="playlists/playlist/:playlistId"
           element={<SinglePlaylist />}
         ></Route>
+        <Route path="edit-video/:id" element={<EditVideo />}></Route>
       </Route>
 
-      {/* <Route path="/dummy" element={<HomePage />}></Route> */}
+      <Route path="test" element={<Dashboard />}></Route>
+
+      <Route path="*" element={<ErrorPage />}></Route>
 
       <Route path="/user/:username" element={<UserProfile />}></Route>
     </>

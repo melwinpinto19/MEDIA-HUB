@@ -119,7 +119,7 @@ const PlaylistsComponent = () => {
 
   // Define styles based on dark mode
   const containerStyle = isDarkMode
-    ? "bg-gray-900 text-gray-100"
+    ? "bg-slate-900 text-gray-100"
     : "bg-white text-gray-800";
   const inputStyle = isDarkMode
     ? "bg-gray-800 border-gray-700 text-gray-100"
@@ -130,7 +130,7 @@ const PlaylistsComponent = () => {
     : "bg-blue-600 hover:bg-blue-700 text-white";
 
   return (
-    <div className={` mx-auto my-20 py-6 px-4 ${containerStyle}`}>
+    <div className={` mx-auto  py-6 px-4 ${containerStyle}`}>
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2
@@ -262,7 +262,7 @@ const PlaylistItem = ({ data, onDelete }) => {
   return (
     <div
       className={`${
-        dark ? "bg-gray-800" : "bg-white"
+        dark ? "bg-slate-800" : "bg-white"
       } shadow-md rounded-lg p-4 flex items-center space-x-4`}
     >
       {/* Playlist Thumbnail */}

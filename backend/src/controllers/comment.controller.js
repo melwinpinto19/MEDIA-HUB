@@ -9,9 +9,31 @@ const getVideoComments = asyncHandler(async (req, res) => {
 
   if (!videoId) throw new ApiError(401, "Video id is required");
 
-  const comments = await commentModel
-    .find({ video: videoId })
-    .populate("owner");
+  // const comments = await commentModel
+  //   .find({ video: videoId })
+  //   .populate("owner");
+
+  const comments = await commentModel.aggregate([
+    { $match: { video: new mongoose.Types.ObjectId(videoId) } },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+      },
+    },
+    {
+      $addFields: {
+        owner: {
+          $arrayElemAt: ["$owner", 0],
+        },
+        isCurrentUser: {
+          $eq: ["$owner._id", new mongoose.Types.ObjectId(req.user._id)],
+        },
+      },
+    },
+  ]);
 
   res.status(200).json({ data: comments });
 });
@@ -29,7 +51,13 @@ const addComment = asyncHandler(async (req, res) => {
 
   if (!comment) throw new ApiError("DB ERROR: On adding comment");
 
-  res.status(200).json(new ApiResponse(200, "Comment was successful", comment));
+  const getComment = await commentModel
+    .findOne({ _id: comment._id })
+    .populate("owner");
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, "Comment was successful", getComment));
 });
 
 const updateComment = asyncHandler(async (req, res) => {

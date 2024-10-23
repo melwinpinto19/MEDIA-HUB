@@ -70,7 +70,7 @@ const Comments = ({ videoId }) => {
   };
 
   return (
-    <div className="max-w-2xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+    <div className="w-full p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg mt-3">
       {/* Add New Comment Section */}
       <div className="flex items-start mb-4">
         <img

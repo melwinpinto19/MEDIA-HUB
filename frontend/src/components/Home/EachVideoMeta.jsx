@@ -1,12 +1,21 @@
-import React from "react";
+import React,{useState} from "react";
 import { Link } from "react-router-dom";
 import { getFormatFromDiff } from "../../utils/DateUtil";
 import { useSelector } from "react-redux";
 
 const VideoCard = ({ videoDetails }) => {
-  const { _id, title, thumbnail, ownerData, duration, views, createdAt } =
-    videoDetails;
+  const {
+    _id,
+    title,
+    thumbnail,
+    ownerData,
+    duration,
+    views,
+    createdAt,
+    videoFile,
+  } = videoDetails;
   const mode = useSelector((state) => state.mode.value);
+  const [togglePreview, setTogglePreview] = useState(false);
 
   const { days, months, years } = getFormatFromDiff(createdAt);
 
@@ -30,12 +39,25 @@ const VideoCard = ({ videoDetails }) => {
       {/* Thumbnail section */}
       <div className="relative jus">
         <Link to={`/home/videos/video/${_id}`}>
-          <img
-            src={thumbnail}
-            alt="Video thumbnail"
-            className="w-full h-40 object-cover"
-            loading="lazy"
-          />
+          {!togglePreview && (
+            <img
+              src={thumbnail}
+              alt="Video thumbnail"
+              className="w-full h-40 object-cover"
+              loading="lazy"
+              onMouseEnter={() => setTogglePreview(true)}
+            />
+          )}
+          {togglePreview && (
+            <video
+              src={videoFile}
+              alt="Video"
+              className="w-full h-40 object-cover"
+              loading="lazy"
+              autoPlay
+              onMouseLeave={() => setTogglePreview(false)}
+            />
+          )}
         </Link>
         {/* Duration overlay */}
         <div className="absolute right-2 bottom-2 bg-black bg-opacity-75 text-sm px-2 py-1 rounded">

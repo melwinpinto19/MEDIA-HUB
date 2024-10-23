@@ -10,6 +10,8 @@ import WatchHistory from "./WatchHistory";
 import Playlist from "./Playlist";
 import SinglePlaylist from "./SinglePlaylist";
 import Comments from "./Comments";
+import Navbar from "./NavBar";
+import EditVideo from "./EditVideo";
 
 export {
   Home,
@@ -23,5 +25,7 @@ export {
   WatchHistory,
   Playlist,
   SinglePlaylist,
-  Comments
+  Comments,
+  Navbar,
+  EditVideo,
 };

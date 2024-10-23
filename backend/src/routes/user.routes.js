@@ -11,6 +11,7 @@ import {
   deleteUser,
   getUserProfile,
   getUserWatchHistory,
+  getUserDashboard,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import verifyJwt from "../middlewares/logout.middleware.js";
@@ -59,5 +60,7 @@ router
   );
 
 router.route("/get-user-watch-history").get(verifyJwt, getUserWatchHistory);
+
+router.route("/get-user-dashboard").get(verifyJwt, getUserDashboard);
 
 export default router;

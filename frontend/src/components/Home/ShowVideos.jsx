@@ -10,7 +10,7 @@ const ShowVideos = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const mode = useSelector((state) => state.mode.value);
-
+  
   const loadVideos = async () => {
     try {
       const res = await axios.get("/api/v1/videos/getAllVideos");
@@ -32,8 +32,8 @@ const ShowVideos = () => {
       {!loading && (
         <div
           className={`${
-            mode ? "bg-slate-900" : "bg-white"
-          } flex flex-wrap  gap-5 items-center justify-center  w-full px-2 py-20`}
+            mode ? "bg-slate-950" : "bg-white"
+          } flex flex-wrap  gap-5 items-center justify-center  w-full px-2 py-2`}
           style={{ height: "92vh" }}
         >
           {videos.map((data, index) => (
