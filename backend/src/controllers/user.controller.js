@@ -390,49 +390,89 @@ const getUserWatchHistory = asyncHandler(async (req, res, next) => {
 });
 
 const getUserDashboard = asyncHandler(async (req, res, next) => {
+  // const response = await userModel.aggregate([
+  //   {
+  //     $match: { username: req.user.username }, // Match the current user
+  //   },
+  //   // Subscriber count
+  //   {
+  //     $lookup: {
+  //       from: "subscriptions",
+  //       let: { userId: "$_id" }, // Use 'let' to pass _id
+  //       pipeline: [
+  //         {
+  //           $match: {
+  //             $expr: { $eq: ["$channel", "$$userId"] }, // Match subscriptions where channel matches userId
+  //           },
+  //         },
+  //         {
+  //           $lookup: {
+  //             from: "users",
+  //             localField: "subscriber", // Match subscriber field
+  //             foreignField: "_id",
+  //             as: "subscriber",
+  //           },
+  //         },
+  //         {
+  //           $addFields: {
+  //             subscriber: { $arrayElemAt: ["$subscriber", 0] }, // Get the first subscriber
+  //           },
+  //         },
+  //       ],
+  //       as: "subscribers", // Output to 'subscribers'
+  //     },
+  //   },
+  //   // Get the user's videos array
+  //   {
+  //     $lookup: {
+  //       from: "videos",
+  //       localField: "_id",
+  //       foreignField: "owner", // Match videos where 'owner' is user _id
+  //       as: "videos",
+  //     },
+  //   },
+  //   {
+  //     $addFields: { videosSize: { $size: "$videos" } }, // Calculate the size of the videos array
+  //   },
+  // ]);
+
   const response = await userModel.aggregate([
     {
       $match: { username: req.user.username }, // Match the current user
     },
-    // Subscriber count
+    // Subscribers :
     {
       $lookup: {
         from: "subscriptions",
-        let: { userId: "$_id" }, // Use 'let' to pass _id
-        pipeline: [
-          {
-            $match: {
-              $expr: { $eq: ["$channel", "$$userId"] }, // Match subscriptions where channel matches userId
-            },
-          },
-          {
-            $lookup: {
-              from: "users",
-              localField: "subscriber", // Match subscriber field
-              foreignField: "_id",
-              as: "subscriber",
-            },
-          },
-          {
-            $addFields: {
-              subscriber: { $arrayElemAt: ["$subscriber", 0] }, // Get the first subscriber
-            },
-          },
-        ],
-        as: "subscribers", // Output to 'subscribers'
+        localField: "_id",
+        foreignField: "channel",
+        as: "subscribers",
       },
     },
-    // Get the user's videos array
+    {
+      $lookup: {
+        from: "users",
+        localField: "subscribers.subscriber",
+        foreignField: "_id",
+        as: "subscribers",
+      },
+    },
+    // videos :
     {
       $lookup: {
         from: "videos",
         localField: "_id",
-        foreignField: "owner", // Match videos where 'owner' is user _id
+        foreignField: "owner",
         as: "videos",
       },
     },
+
     {
-      $addFields: { videosSize: { $size: "$videos" } }, // Calculate the size of the videos array
+      $addFields: {
+        subscribersCount: { $size: "$subscribers" },
+        videosCount: { $size: "$videos" },
+        viewsCount: { $sum: "$videos.views" },
+      },
     },
   ]);
 
@@ -441,9 +481,9 @@ const getUserDashboard = asyncHandler(async (req, res, next) => {
     return res.status(404).json({ message: "User not found" });
   }
 
-  res.status(200).json(response[0]); // Send the first document of the response
+  // res.status(200).json(response[0]); // Send the first document of the response
+  res.status(200).json(response[0]);
 });
-
 
 export {
   registerUser,

@@ -7,8 +7,12 @@ import videosRouter from "./routes/video.routes.js";
 import likesRouter from "./routes/like.routes.js";
 import playlistRouter from "./routes/playlist.routes.js";
 import commentsRouter from "./routes/comment.routes.js";
+import bodyParser from "body-parser";
 
 const app = express();
+
+// parse application/json
+// app.use(bodyParser.json());
 
 // it provides the restriction for requests of URL
 app.use(cors({ origin: process.env.ORIGIN }));

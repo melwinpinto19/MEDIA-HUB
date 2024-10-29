@@ -4,6 +4,7 @@ import ChangePassword from "./ChangePassword";
 import UserProfile from "./UserProfile";
 import Dashboard from "./Dashboard";
 import Test from "./Test";
+import DashboardChart from "./DashboardChart";
 
 export {
   ProfileDashboard,
@@ -12,4 +13,5 @@ export {
   UserProfile,
   Dashboard,
   Test,
+  DashboardChart,
 };

@@ -316,6 +316,57 @@ const addViews = asyncHandler(async (req, res) => {
   res.status(200).json({ data: "success" });
 });
 
+const editVideo = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  if (!id) throw new ApiError(401, "Video id is required");
+
+  console.log(req.body);
+  const {
+    editVideo,
+    editThumbnail,
+    title,
+    description,
+    publish: isPublished,
+  } = req.body;
+
+  const cloudinaryVideoPath = "",
+    cloudinaryThumbnailPath = "";
+
+  if (editVideo) {
+    const localPath = req.files?.videoFile[0]?.path;
+
+    if (!localPath) throw new ApiError(400, "Video file is required");
+
+    cloudinaryVideoPath = await uploadOnCloudinary(localPath);
+  }
+
+  if (editThumbnail) {
+    const localPath = req.files?.thumbnail[0]?.path;
+
+    if (!localPath) throw new ApiError(400, "thumbnail file is required");
+
+    cloudinaryThumbnailPath = await uploadOnCloudinary(localPath);
+  }
+
+  const getVideo = await videoModel.findOne({ _id: id });
+
+  const editedVideo = await videoModel.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        title: title || getVideo?.title,
+        description: description || getVideo?.description,
+        isPublished: isPublished || getVideo?.isPublished,
+        videoFile: cloudinaryVideoPath?.url || getVideo?.videoFile,
+        thumbnail: cloudinaryThumbnailPath?.url || getVideo?.thumbnail,
+      },
+    },
+    { new: true }
+  );
+
+  res.status(200).json({ data: editedVideo });
+});
+
 export {
   getVideosSearchResults,
   createVideo,
@@ -324,4 +375,5 @@ export {
   getSearchedVideos,
   getVideo,
   addViews,
+  editVideo,
 };

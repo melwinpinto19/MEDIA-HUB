@@ -1,76 +1,51 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-
-// Dummy data for most viewed video and subscriber details
-const mostViewedVideo = {
-  thumbnail: "https://picsum.photos/200/300", // Placeholder thumbnail
-  title: "Most Watched Video",
-  views: 15000,
-};
-
-const subscribers = [
-  { avatar: "https://picsum.photos/200/300", name: "Channel One" },
-  { avatar: "https://picsum.photos/200/300", name: "Channel Two" },
-  { avatar: "https://picsum.photos/200/300", name: "Channel Three" },
-];
+import { DashboardChart } from ".";
 
 const Dashboard = ({ data }) => {
-  const { videosSize, subscribers } = data;
+  const { videosCount, subscribersCount, viewsCount, subscribers } = data;
   const subscribersCountRef = useRef(null);
   const videosCountRef = useRef(null);
   const totalViewsCountRef = useRef(null);
+  const mostViewedVideo = (() => {
+    const maxi = data.videos.reduce(
+      (max, current) => (current.views > max ? current.views : max),
+      0
+    );
+
+    const getmostViewdVideo = data.videos.filter((each) => each.views == maxi);
+
+    if (getmostViewdVideo.length == 0) return {};
+
+    return getmostViewdVideo[0];
+  })();
 
   // GSAP animation to increment counts
   useEffect(() => {
+    console.log(subscribers);
+
     gsap.fromTo(
       subscribersCountRef.current,
       { innerText: 0 },
-      { innerText: subscribers.length, duration: 2, snap: { innerText: 1 } }
+      { innerText: subscribersCount, duration: 2, snap: { innerText: 1 } }
     );
     gsap.fromTo(
       videosCountRef.current,
       { innerText: 0 },
-      { innerText: videosSize, duration: 2, snap: { innerText: 1 } }
+      { innerText: videosCount, duration: 2, snap: { innerText: 1 } }
     );
     gsap.fromTo(
       totalViewsCountRef.current,
       { innerText: 0 },
-      { innerText: subscribers.length, duration: 2, snap: { innerText: 1 } }
+      { innerText: viewsCount, duration: 2, snap: { innerText: 1 } }
     );
-
-    const xValues = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
-
-    new Chart("myChart", {
-      type: "line",
-      data: {
-        labels: xValues,
-        datasets: [
-          {
-            data: [100, 50, 35],
-            borderColor: "green",
-            fill: false,
-          },
-          {
-            data: [100, 130, 200],
-            borderColor: "blue",
-            fill: false,
-          },
-        ],
-      },
-      options: {
-        legend: { display: false },
-      },
-    });
   }, []);
 
   return (
     <div className="max-h-screen w-full grid grid-rows-6 grid-cols-12 gap-4 p-6 bg-black">
       {/* Reserve space for the chart (row-span-2 for 33% height) */}
-      <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform  col-span-6 row-span-4">
-        <h3 className="text-lg text-white p-4">
-          Month-wise Subscribers & Views
-        </h3>
-        <canvas id="myChart" className="h-50 w-100"></canvas>
+      <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform  col-span-6 row-span-4 mb-3">
+        <DashboardChart />
       </div>
 
       {/* Number of Subscribers */}
@@ -124,10 +99,10 @@ const Dashboard = ({ data }) => {
                   <img
                     src={sub.avatar}
                     alt="Avatar"
-                    className="w-12 h-12 rounded-full"
+                    className="w-16 h-16 rounded-full"
                   />
                 </td>
-                <td className="py-4 text-white">{sub.name}</td>
+                <td className="py-4 text-white">{sub.username}</td>
               </tr>
             ))}
           </tbody>

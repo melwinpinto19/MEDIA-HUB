@@ -2,15 +2,20 @@ import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Switch } from "@headlessui/react";
 import { useParams } from "react-router";
-import axios from "axios";
+import axios, { formToJSON } from "axios";
 import { ColorRing } from "react-loader-spinner";
-import { Form } from "react-router-dom";
-import { login } from "../../redux/authSlice";
 
 const EditVideo = () => {
   const { id } = useParams();
   const isDarkMode = useSelector((state) => state.mode.value);
   const [loading, setLoading] = useState(true);
+
+  const editVideoFun = async () => {
+    const formData = new FormData(formRef.current);
+    try {
+      await axios.post(`/api/v1/videos/edit-video/${id}`, formData);
+    } catch (error) {}
+  };
 
   useEffect(() => {
     (async () => {
@@ -116,6 +121,7 @@ const EditVideo = () => {
               className={`${
                 editThumbnail ? "bg-blue-600" : "bg-gray-400"
               } relative inline-flex h-6 w-11 items-center rounded-full`}
+              name="editThumbnail"
             >
               <span className="sr-only">Enable editing thumbnail</span>
               <span
@@ -151,6 +157,7 @@ const EditVideo = () => {
               className={`${
                 editVideo ? "bg-blue-600" : "bg-gray-400"
               } relative inline-flex h-6 w-11 items-center rounded-full`}
+              name="editVideo"
             >
               <span className="sr-only">Enable editing video</span>
               <span
@@ -184,6 +191,7 @@ const EditVideo = () => {
               className={`${
                 isPublished ? "bg-green-600" : "bg-gray-400"
               } relative inline-flex h-6 w-11 items-center rounded-full`}
+              name="publish"
             >
               <span className="sr-only">Toggle publish status</span>
               <span
@@ -199,23 +207,7 @@ const EditVideo = () => {
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-all"
             onClick={(e) => {
               e.preventDefault();
-
-              const form = new FormData(formRef.current);
-
-              form.append("publish", isPublished);
-              form.append("editThumbnail", editThumbnail);
-              form.append("editVideo", editVideo);
-
-              console.log("form", form);
-
-              // handle save logic here
-              console.log({
-                title,
-                description,
-                thumbnail,
-                video,
-                isPublished,
-              });
+              editVideoFun();
             }}
           >
             Save Changes

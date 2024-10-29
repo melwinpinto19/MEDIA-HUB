@@ -6,6 +6,7 @@ import {
   getSearchedVideos,
   getVideo,
   addViews,
+  editVideo,
 } from "../controllers/video.controller.js";
 import verifyJwt from "../middlewares/logout.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -30,5 +31,7 @@ router.route("/getSearchedVideos").post(verifyJwt, getSearchedVideos);
 router.route("/getVideo").post(verifyJwt, getVideo);
 
 router.route("/add-views").post(verifyJwt, addViews);
+
+router.route("/edit-video/:id").post(verifyJwt, editVideo);
 
 export default router;
