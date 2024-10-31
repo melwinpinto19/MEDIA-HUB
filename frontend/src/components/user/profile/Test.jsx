@@ -45,7 +45,7 @@ const Dashboard = ({ data }) => {
     <div className="max-h-screen w-full grid grid-rows-6 grid-cols-12 gap-4 p-6 bg-black">
       {/* Reserve space for the chart (row-span-2 for 33% height) */}
       <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform  col-span-6 row-span-4 mb-3">
-        <DashboardChart />
+        <DashboardChart subscriberData={data.subscribers} viewsData={data.videos}/>
       </div>
 
       {/* Number of Subscribers */}
